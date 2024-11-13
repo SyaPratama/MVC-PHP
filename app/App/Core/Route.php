@@ -19,6 +19,28 @@ class Route
   
   static function run(): void
   {
-    var_dump(self::$routes);
+    $path = "/";
+    $url = self::parseURL();
+    if(isset($url[0]))
+    {
+      $path .= join("/",$url);
+    }
+    
+    $method = $_SERVER["REQUEST_METHOD"];
+    foreach (self::$routes as $routing)
+    {
+      var_dump($method);
+    }
+  }
+  
+  static function parseURL()
+  {
+    if(isset($_GET["url"]))
+    {
+      $url = rtrim($_GET["url"],"/");
+      $url = filter_var($url,FILTER_SANITIZE_URL);
+      $url = explode("/",$url);
+      return $url;
+    }
   }
 }
