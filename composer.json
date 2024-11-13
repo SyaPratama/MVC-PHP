@@ -1,0 +1,17 @@
+{
+    "name": "syapratama/mvcpattern",
+    "description": "Kerangka MVC PHP Sederhana Menggunakan Composer",
+    "type": "project",
+    "license": "ISC",
+    "authors": [
+        {
+            "name": "SyaPratama",
+            "email": "inirasya16@gmail.com"
+        }
+    ],
+    "autoload":{
+      "psr-4":{
+        "MVC\\":"app/"
+      }
+    }
+}
