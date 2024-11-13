@@ -29,42 +29,15 @@ class Route
     $method = $_SERVER["REQUEST_METHOD"];
     foreach (self::$routes as $routing)
     {
-      $reqUri = explode("/",$path);
-      $uri = explode("/",$routing["path"]);
-      
-      preg_match_all("/(?<={).+?(?=})/",$routing["path"],$result);
-      if(empty($result[0]))
+     $paramVar = preg_replace("/\{(.*?)\}/","([0-9a-zA-Z]*)",$routing["path"]);
+      $pattern = "#^". $paramVar ."$#";
+      if(preg_match($pattern,$path,$result) && $method == $routing["method"])
       {
-        if($method != $routing["method"] && $path != $routing["path"]) return;
-      call_user_func_array([$controller,$function],$params);
-       return;
+        $controller = new $routing["controller"];
+        $function = $routing["function"];
+        array_shift($result);
+        call_user_func_array([$controller,$function],$result);
       }
-      
-      $paramKey = [];
-      foreach ($result[0] as $key)
-      {
-        array_push($paramKey,$key);
-      }
-      
-      $indexUri = [];
-      foreach ($uri as $index => $param)
-      {
-        if(preg_match("/{.*}/",$param))
-        {
-          array_push($indexUri,$index);
-        }
-      }
-      
-      foreach ($indexUri as $key => $index)
-      {
-        if(empty($reqUri[$index]))
-        {
-          return;
-        }
-       $params[$paramKey[$key]] = $reqUri[$index];
-      }
-      call_user_func_array([$controller,$function],$params);
-      exit(200);
     }
   }
   

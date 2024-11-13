@@ -12,6 +12,6 @@ class Test
   }
   function hello()
   {
-    echo "Hello";
+    echo "Hello Konyol";
   }
 }
