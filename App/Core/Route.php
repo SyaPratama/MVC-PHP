@@ -33,6 +33,12 @@ class Route
       $pattern = "#^". $paramVar ."$#";
       if(preg_match($pattern,$path,$result) && $method == $routing["method"])
       {
+        foreach($routing["middlewares"] as $middleware)
+        {
+          $newMiddleware = new $middleware;
+          $newMiddleware->before();
+        }
+
         $controller = new $routing["controller"];
         $function = $routing["function"];
         array_shift($result);
