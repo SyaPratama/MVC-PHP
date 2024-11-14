@@ -1,0 +1,15 @@
+{
+  "name": "mvc-php",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "tailwind": "npm run build-tailwind",
+    "build-tailwind": "npx tailwindcss -i ./public/css/main.css -o ./public/css/app.css --watch" 
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tailwindcss": "^3.4.14"
+  }
+}
