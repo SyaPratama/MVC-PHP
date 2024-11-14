@@ -60,7 +60,7 @@ class Route
         $controller = new \App\Core\NotFound();
         $function = "Error";
         $result = [];
-        call_user_func_array([$controller,$function],$result);
+        \App\Core\View::render("Error",["title" => "Page Not Found! 404", "code" => 404]);
         exit(404);
       }
   }
