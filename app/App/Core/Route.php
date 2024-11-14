@@ -22,6 +22,7 @@ class Route
     $path = "/";
     $url = self::parseURL();
     $params = [];
+    $notFound = true;
     if(isset($url[0]))
     {
       $path .= join("/",$url);
@@ -31,7 +32,6 @@ class Route
     {
      $paramVar = preg_replace("/\{(.*?)\}/","([0-9a-zA-Z]*)",$routing["path"]);
       $pattern = "#^". $paramVar ."$#";
-      var_dump(preg_match($pattern,$path,$result));
       if(preg_match($pattern,$path,$result) && $method == $routing["method"])
       {
         $controller = new $routing["controller"];
@@ -45,9 +45,12 @@ class Route
           }
         }
         }
+        $notFound = false;
         call_user_func_array([$controller,$function],$result);
+        exit(200);
       }
-      if($routing["path"] != "*")
+    }
+    if($notFound)
       {
         $controller = new \MVC\App\Core\NotFound;
         $function = "Error";
@@ -55,7 +58,6 @@ class Route
         call_user_func_array([$controller,$function],$result);
         exit(404);
       }
-    }
   }
   
   static function parseURL()
