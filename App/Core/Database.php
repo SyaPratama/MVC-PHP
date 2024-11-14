@@ -2,20 +2,36 @@
 
 namespace App\Core;
 
+require_once __DIR__ . "/../../config/config.php";
+
 class Database
 {
     private $dbh;
     private $opt;
     private $statement;
-    public function __construct(private string $dbType = getenv("DB_TYPE"), private string $host = getenv("DB_HOST"), private string $name = getenv("DB_NAME"), private string $user = getenv("DB_USER"), private string $pass = getenv("DB_PASS"))
+    private string $type = DB_CONNECT;
+    private string $host = DB_HOST;
+    private string $name = DB_NAME;
+    private string $user = DB_USER;
+    private string $pass = DB_PASS;
+    public function __construct()
     {
+      try{
         $this->opt = [
             \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
             \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
             \PDO::ATTR_PERSISTENT => true,
         ];
-
-        $this->dbh = new \PDO("{$this->dbType}:host={$this->host};dbname={$this->name}",username: $this->user,password: $this->pass,options: $this->opt);
+        
+        $this->dbh = new \PDO("{$this->type}:host={$this->host};dbname={$this->name}", username: $this->user, password: $this->pass, options: $this->opt);
+      }catch(\PDOException $e){
+        if($e->getCode() == 1049)
+        {
+            $pdo = new \PDO("{$this->type}:host={$this->host}",username: $this->user,password: $this->pass,options: [\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION]);
+            $pdo->query("CREATE DATABASE IF NOT EXISTS $this->name");
+            $pdo->query("use $this->name");
+        }
+      }
     }
 
     public function prepare(string $sql): void
@@ -26,14 +42,14 @@ class Database
     public function bind(string $param, mixed $value, $type = null): void
     {
         if ($type === null) {
-            match(true) {
+            match (true) {
                 is_int($value) => $type = \PDO::PARAM_INT,
                 is_bool($value) => $type = \PDO::PARAM_BOOL,
                 $value === null => $type = \PDO::PARAM_NULL,
                 default => $type = \PDO::PARAM_STR,
             };
         }
-        $this->statement->bindParam($param,$value,$type);
+        $this->statement->bindParam($param, $value, $type);
     }
 
     public function execute(): void

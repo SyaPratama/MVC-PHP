@@ -43,5 +43,5 @@ if($fopen)
 
 foreach($env as $name => $value)
 {
-    putenv("{$name}={$value}");
+    define($name,$value);
 }
