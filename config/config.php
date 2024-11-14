@@ -2,6 +2,7 @@
 
 require_once __DIR__ . "/./env.php";
 
+$BASEURL = "";
 
 if (getenv("APP_STATUS") == "local" || getenv("APP_STATUS") == "dev") {
     switch ($_SERVER["HTTP_HOST"]) {
@@ -15,7 +16,6 @@ if (getenv("APP_STATUS") == "local" || getenv("APP_STATUS") == "dev") {
             $servername = $_SERVER["SERVER_NAME"];
             $BASEURL = "http://$servername";
             break;
-
     }
 } else if (getenv("APP_STATUS") == "prod" || getenv("APP_STATUS") == "production") {
     $servername = $_SERVER["SERVER_NAME"];
