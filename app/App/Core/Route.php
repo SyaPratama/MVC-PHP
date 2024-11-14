@@ -31,12 +31,29 @@ class Route
     {
      $paramVar = preg_replace("/\{(.*?)\}/","([0-9a-zA-Z]*)",$routing["path"]);
       $pattern = "#^". $paramVar ."$#";
+      var_dump(preg_match($pattern,$path,$result));
       if(preg_match($pattern,$path,$result) && $method == $routing["method"])
       {
         $controller = new $routing["controller"];
         $function = $routing["function"];
         array_shift($result);
+        if(isset($result[0]))
+        { 
+          foreach ($result as $index => $value){
+          if(is_numeric($value)){
+            $result[$index] = intval($value);
+          }
+        }
+        }
         call_user_func_array([$controller,$function],$result);
+      }
+      if($routing["path"] != "*")
+      {
+        $controller = new \MVC\App\Core\NotFound;
+        $function = "Error";
+        $result = [];
+        call_user_func_array([$controller,$function],$result);
+        exit(404);
       }
     }
   }

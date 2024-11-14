@@ -4,7 +4,7 @@ namespace MVC\App\Controller;
 
 class Test 
 {
-  function index(String $id,String $idTest)
+  function index(Int $id,String $idTest)
   {
     var_dump([
       "id" => $id,
