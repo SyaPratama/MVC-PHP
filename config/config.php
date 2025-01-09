@@ -2,7 +2,7 @@
 
 require_once __DIR__ . "/./env.php";
 
-$BASEURL = "";
+$BASEURL = "" ;
 
 if ( APP_STATUS == "local" || APP_STATUS == "dev") {
     switch ($_SERVER["HTTP_HOST"]) {
